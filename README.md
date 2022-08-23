@@ -1,7 +1,5 @@
 # Javascript-Side-Scroller-Game-Practice2022
 
-# State-Management-in-Games-Practice2022
-
 
 ## Description
 
@@ -55,7 +53,6 @@ leave a space after this to add the following repository link
  ## Project Media
 
 _WIP_1.1
-
 
  ## Deploy
 
