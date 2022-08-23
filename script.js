@@ -4,6 +4,7 @@ window.addEventListener('load', function(){
     canvas.width = 800;
     canvas.height = 720;
     let enemies = [];
+    let score = 0;
     
 
     /* CLASSES */
@@ -154,7 +155,11 @@ window.addEventListener('load', function(){
                 this.frameTimer += deltaTime;
             }
             this.x -= this.speed;
-            if (this.x < 0 - this.width) this.markedForDeletion = true;
+            if (this.x < 0 - this.width){
+
+                this.markedForDeletion = true;
+                score++;
+            } 
         }
     }
     /* CLASSES */
@@ -177,8 +182,12 @@ window.addEventListener('load', function(){
         });
         enemies = enemies.filter(enemy => !enemy.markedForDeletion);
     }
-    function displayStatusText(){
-
+    function displayStatusText(context){
+        context.font = '40px Helvetica';
+        context.fillStyle = 'black';
+        context.fillText('score: ' + score, 16, 52)
+        context.fillStyle = 'azure';
+        context.fillText('score: ' + score, 20, 50)
     }
 
     const input = new InputHandler();
@@ -203,6 +212,7 @@ window.addEventListener('load', function(){
         /* enemy1.draw(ctx);
         enemy1.update(); */
         handleEnemies(deltaTime);
+        displayStatusText(ctx);
         requestAnimationFrame(animate);
     }
     animate(0);
