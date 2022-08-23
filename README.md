@@ -7,16 +7,21 @@
 
 Practice to build a 2D side scroll game using html, css and javascript.
 
-Jump       pressing 'W' while playing; 
-Move Left  pressing 'A' while playing; 
-Move Right pressing 'D' while playing; 
+## Controls
 
-_Notes 1.0_
+JUMP  
+'W' 
+
+LEFT  
+'A' 
+
+RIGHT       
+'D' 
+
+## _Notes 1.0_
  - Able to change movement while jump is active, direction forward or backwards.
  - To retry you'll need to reload.
  - Collision hitboxes aren't perfect fit to strokes & circles around characters on screen.
-
-## About the Project
 
 This is practice was made thanks to [Franks laboratory](https://twitter.com/code_laboratory).
 
