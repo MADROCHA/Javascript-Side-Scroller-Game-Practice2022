@@ -5,6 +5,7 @@ window.addEventListener('load', function(){
     canvas.height = 720;
     let enemies = [];
     let score = 0;
+    let gameOver = false;
     
 
     /* CLASSES */
@@ -56,11 +57,26 @@ window.addEventListener('load', function(){
 
         }
         draw(context){
-            /* context.fillStyle = 'white';
-            context.fillRect(this.x, this.y, this.width, this.height); */
+            /*DRAW COLLISION VECTORS */
+
+            context.strokeStyle = 'white';
+            context.strokeRect(this.x, this.y, this.width, this.height);
+            context.beginPath();
+            context.arc(this.x + this.width * 0.5, this.y + this.height * 0.5, this.width * 0.5, 0, Math.PI * 2);
+            context.stroke();
+            /*DRAW PLAYER IMAGE FRAMES */
             context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height,  this.width, this.height, this.x, this.y, this.width, this.height)
         }
-        update(input, deltaTime){
+        update(input, deltaTime, enemies){
+            /* COLLISION DETECTION */
+            enemies.forEach(enemy => {
+                const dx = (enemy.x + enemy.width * 0.5) - (this.x + this.width * 0.5);
+                const dy = (enemy.y + enemy.height * 0.5) - (this.y + this.height * 0.5);
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < enemy.width * 0.3 + this.width * 0.3){
+                    gameOver = true;
+                }
+            });
             /* SPRITE FRAME ANIMATION */
             if (this.frameTimer > this.frameInterval){
                 if(this.frameX >= this.maxFrame) this.frameX = 0;
@@ -110,7 +126,7 @@ window.addEventListener('load', function(){
             this.y = 0,
             this.width = 2400;
             this.height = 720;
-            this.speed = 5.5;
+            this.speed = 2.5;
         }
         draw(context){
             context.drawImage(this.image, this.x, this.y, this.width, this.height)
@@ -143,6 +159,13 @@ window.addEventListener('load', function(){
             this.markedForDeletion = false;
         }
         draw(context){
+            /*DRAW COLLISION VECTORS */
+            context.strokeStyle = 'white';
+            context.strokeRect(this.x, this.y, this.width, this.height);
+            context.beginPath();
+            context.arc(this.x + this.width * 0.5, this.y + this.height * 0.5, this.width * 0.5, 0, Math.PI * 2);
+            context.stroke();
+            /*DRAW ENEMY IMAGE FRAMES */
             context.drawImage(this.image, this.frameX * this.width, 0, this.width   , this.height, this.x, this.y, this.width, this.height)
         }
         update(deltaTime){
@@ -185,9 +208,18 @@ window.addEventListener('load', function(){
     function displayStatusText(context){
         context.font = '40px Helvetica';
         context.fillStyle = 'black';
-        context.fillText('score: ' + score, 16, 52)
+        context.fillText('score: ' + score, 16, 52);
         context.fillStyle = 'azure';
-        context.fillText('score: ' + score, 20, 50)
+        context.fillText('score: ' + score, 20, 50);
+        if (gameOver){
+            context.textAlign = 'center';
+            context.fillStyle = 'black';
+            context.fillText('GAME OVER', canvas.width * 0.5, 150);
+            context.fillStyle = 'azure';
+            context.fillText('GAME OVER', canvas.width * 0.5 + 4, 150 + 2);
+            /* context.fillText('GAME OVER', canvas.width * 0.5, canvas.height * 0.5);
+            context.fillText('GAME OVER', canvas.width * 0.5 + 4, canvas.height * 0.5 + 2); */
+        }
     }
 
     const input = new InputHandler();
@@ -206,13 +238,14 @@ window.addEventListener('load', function(){
         /* console.log(deltaTime) */
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         background.draw(ctx);
-        /* background.update(); */
+        background.update();
+        handleEnemies(deltaTime);
         player.draw(ctx);
-        player.update(input, deltaTime);
+        player.update(input, deltaTime, enemies);
         /* enemy1.draw(ctx);
         enemy1.update(); */
-        handleEnemies(deltaTime);
         displayStatusText(ctx);
+        if (!gameOver)
         requestAnimationFrame(animate);
     }
     animate(0);
